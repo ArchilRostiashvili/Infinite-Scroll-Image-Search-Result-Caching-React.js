@@ -7,8 +7,8 @@
 .info-container {
   border: 1px solid black;
   display: flex;
-  height: calc((100vh) / 20 + 120px);
-  /* gap: 10px; */
+  height: calc((100vh) / 20 + 200px);
+  gap: 10px;
 }
 
 .image-box {
@@ -40,6 +40,5 @@
 }
 
 .result-container {
-  /* height: calc(100vh - 50px); */
-  height: calc(100vh - 50px);
+  height: calc(100vh - 70px);
 }
