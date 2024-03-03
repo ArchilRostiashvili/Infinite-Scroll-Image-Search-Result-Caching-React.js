@@ -4,7 +4,7 @@ import { useDebounce } from "./bounceHooks";
 import { useQuery, keepPreviousData } from "@tanstack/react-query";
 import { useQueryClient } from "@tanstack/react-query";
 export default function useImageSearch(term: string, pageNumber: number) {
-  const [hasMore, setHasMore] = useState<boolean>(false);
+  const [hasMore, setHasMore] = useState<boolean>(true);
   const debouncedSearch = useDebounce(term);
   const queryClient = useQueryClient();
   const {
@@ -70,10 +70,23 @@ export default function useImageSearch(term: string, pageNumber: number) {
       return () => cancel();
     },
     placeholderData: keepPreviousData,
-    refetchOnWindowFocus: false,
-    staleTime: Infinity,
-    refetchOnMount: true,
+    staleTime: 60000 * 20,
   });
-  console.log("Fetching", { debouncedSearch, data });
-  return { isLoading, error, data, hasMore, isFetching, isRefetching };
+
+  console.log({
+    hasMore,
+    debouncedSearch,
+    data,
+    isRefetching,
+    isLoading,
+    isFetching,
+  });
+  return {
+    isLoading,
+    error,
+    data,
+    hasMore,
+    isFetching,
+    isRefetching,
+  };
 }

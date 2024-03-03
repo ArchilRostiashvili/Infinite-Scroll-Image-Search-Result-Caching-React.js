@@ -12,7 +12,7 @@ export default function App() {
     setSearchHistory(JSON.parse(storedString));
     setTerm("");
     setPageNumber(0);
-  }, []);
+  }, [storedString]);
 
   const { data, hasMore, isLoading, error, isFetching } = useImageSearch(
     term,
