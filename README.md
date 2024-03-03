@@ -1,30 +1,20 @@
-# React + TypeScript + Vite
-
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
-
-Currently, two official plugins are available:
-
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
-
-- Configure the top-level `parserOptions` property like this:
-
-```js
-export default {
-  // other rules...
-  parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    project: ['./tsconfig.json', './tsconfig.node.json'],
-    tsconfigRootDir: __dirname,
-  },
-}
-```
-
-- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
-- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
+დაწერეთ ფოტო გალერეის აპლიკაცია, რომელსაც ექნება შემდეგი ფუნქციონალი: 
+1.  აპლიკაციას უნდა ჰქონდეს 2 გვერდი: „მთავარი“ და „ისტორია“ 
+2.  მთავარ გვერდზე აჩვენეთ 20 ყველაზე პოპულარული სურათი 
+3.  მთავარ გვერდზე დაამატეთ ტექსტური ველი სახელად „ძებნა“, ტექსტში 
+ინფორმაციის ჩაწერის დროს განაახლეთ სურათები შესაბამისი საძიებო სიტყვის 
+მიხედვით. (ძებნა ღილაკი არ არის საჭირო) 
+4.  გამოიყენეთ ქეშირების მექანიზმი. მაგალითად, თუ ერთხელ მოვძებნე home, შემდეგ 
+car, ხოლო შემდეგ ისევ home, მონაცემები აჩვენეთ ქეშიდან და ზედმეტი API 
+მოთხოვნები არ გააკეთოთ. 
+5.  ისტორიის გვერდზე უნდა ვხედავდე ყველა საძიებო სიტყვას, რომლითაც სურათები 
+მოვძებნე. თითოეულზე დაჭერისას უნდა მიჩვენოს შესაბამისი სურათები. 
+6.  სურათების ჩვენებისას გამოიყენეთ infinite scroll როგორც მთავარ, ასევე ისტორიის 
+გვერდზეც 
+7.  სურათზე დაჭერისას სურათის სრულ ვერსიასთან ერთად აჩვენეთ მისი გადმოწერის, 
+ნახვების და მოწონებების რაოდენობები მოდალურ ფანჯარაში. 
+8.  გამოიყენეთ შემდეგი API: https://unsplash.com/documentation 
+შენიშვნა:  
+არ გამოიყენოთ მზა კომპონენტების ბიბლიოთეკები, როგორიცაა mui, antd, bootstrap და ა.შ.  
+infinite scroll -ის ფუნქციონალი დაწერეთ დამოუკიდებლად. 
+გამოიყენეთ typescript 
