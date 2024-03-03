@@ -7,6 +7,13 @@ export default function App() {
   const [pageNumber, setPageNumber] = useState<number>(1);
   const [searchHistory, setSearchHistory] = useState([]);
 
+  const storedString = localStorage.getItem("searchHistory");
+  useEffect(() => {
+    setSearchHistory(JSON.parse(storedString));
+    setTerm("");
+    setPageNumber(0);
+  }, []);
+
   const { data, hasMore, isLoading, error, isFetching } = useImageSearch(
     term,
     pageNumber
@@ -42,11 +49,6 @@ export default function App() {
     setPageNumber(1);
     console.log(term);
   }
-
-  const storedString = localStorage.getItem("searchHistory");
-  useEffect(() => {
-    setSearchHistory(JSON.parse(storedString));
-  }, [storedString]);
 
   return (
     <>

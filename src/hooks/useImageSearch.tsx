@@ -7,8 +7,6 @@ export default function useImageSearch(term: string, pageNumber: number) {
   const [hasMore, setHasMore] = useState<boolean>(false);
   const debouncedSearch = useDebounce(term);
   const queryClient = useQueryClient();
-
-  console.log({ pageNumber });
   const {
     data = [],
     isFetching,
@@ -36,7 +34,6 @@ export default function useImageSearch(term: string, pageNumber: number) {
           cancelToken: new axios.CancelToken((c) => (cancel = c)),
         })
           .then((res) => {
-            console.log("Fetching", { debouncedSearch, data });
             const storedString = localStorage.getItem("searchHistory");
             let searchHistory = [];
             if (storedString) {
@@ -77,5 +74,6 @@ export default function useImageSearch(term: string, pageNumber: number) {
     staleTime: Infinity,
     refetchOnMount: true,
   });
+  console.log("Fetching", { debouncedSearch, data });
   return { isLoading, error, data, hasMore, isFetching, isRefetching };
 }
