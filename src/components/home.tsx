@@ -2,13 +2,14 @@ import React, { useState, useRef, useCallback } from "react";
 import useImageSearch from "../hooks/useImageSearch";
 import SearchedImage from "./searchedImage";
 
-export default function History() {
+export default function History<T>() {
   const [term, setTerm] = useState<string>("");
   const [pageNumber, setPageNumber] = useState<number>(1);
-  const [isHistory, setIsHistory] = useState<boolean>(false);
 
-  const { data, hasMore, isLoading, error, isFetching, isRefetching } =
-    useImageSearch(term, pageNumber, isHistory);
+  const { data, hasMore, isLoading, error, isFetching } = useImageSearch(
+    term,
+    pageNumber
+  );
   const observer = useRef<IntersectionObserver | undefined>();
   const lastImageElementRef = useCallback(
     (node: any) => {
@@ -58,7 +59,7 @@ export default function History() {
       </div>
       <div className="result-container">
         {data?.length !== 0 &&
-          data?.map((image, index) => {
+          data?.map((image: T, index: T) => {
             if (data.length === index + 1) {
               return (
                 <SearchedImage

@@ -1,8 +1,8 @@
-import React, { useState, useRef, useCallback, useEffect } from "react";
+import { useState, useRef, useCallback, useEffect } from "react";
 import useImageSearch from "../hooks/useImageSearch";
 import SearchedImage from "./searchedImage";
 
-export default function App() {
+export default function App<T>() {
   const [term, setTerm] = useState<string>("");
   const [pageNumber, setPageNumber] = useState<number>(1);
   const [searchHistory, setSearchHistory] = useState([]);
@@ -77,8 +77,8 @@ export default function App() {
         {error && <h1>Something went wrong...</h1>}
       </div>
       <div className="result-container">
-        {data?.length !== 0 &&
-          data?.map((image, index) => {
+        {data.length !== 0 &&
+          data.map((image: T, index: number) => {
             if (data.length === index + 1) {
               return (
                 <SearchedImage
