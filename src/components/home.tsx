@@ -1,12 +1,14 @@
 import React, { useState, useRef, useCallback } from "react";
 import useImageSearch from "../hooks/useImageSearch";
+import SearchedImage from "./searchedImage";
 
-export default function App() {
+export default function History() {
   const [term, setTerm] = useState<string>("");
   const [pageNumber, setPageNumber] = useState<number>(1);
+  const [isHistory, setIsHistory] = useState<boolean>(false);
 
-  const { data, hasMore, isLoading, error } = useImageSearch(term, pageNumber);
-
+  const { data, hasMore, isLoading, error, isFetching, isRefetching } =
+    useImageSearch(term, pageNumber, isHistory);
   const observer = useRef<IntersectionObserver | undefined>();
   const lastImageElementRef = useCallback(
     (node: any) => {
@@ -25,7 +27,7 @@ export default function App() {
             setPageNumber((previousPageNumber) => previousPageNumber + 1);
           }
         },
-        { threshold: 0.99 }
+        { threshold: 0.9 }
       );
       if (node) observer.current.observe(node);
     },
@@ -45,54 +47,39 @@ export default function App() {
           value={term}
           className="search-bar"
           onChange={handleSearch}
+          placeholder="შეიყვანეთ საძიებო სიტყვა..."
         ></input>
+      </div>
+      <div className="miscelaneous-box">
+        {isFetching && <h1>Loading...</h1>}
+      </div>
+      <div className="miscelaneous-box">
+        {error && <h1>Something went wrong...</h1>}
       </div>
       <div className="result-container">
         {data?.length !== 0 &&
           data?.map((image, index) => {
-            // SEPARATE COMPONENTS FOR THIS!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
             if (data.length === index + 1) {
               return (
-                <a
-                  // href={image.urls.regular}
-                  ref={lastImageElementRef}
-                  target="_blank"
-                  rel="noreferrer"
+                <SearchedImage
                   key={image?.id}
-                >
-                  <div className="info-container">
-                    <div className="image-box">
-                      <img src={image?.urls.small} />
-                    </div>
-                    <h1>{"№: " + parseInt(index + 1)}</h1>
-                    <p>{image?.description}</p>
-                    <h1>{"likes: " + image?.likes}</h1>
-                  </div>
-                </a>
+                  image={image}
+                  reference={lastImageElementRef}
+                  index={index}
+                ></SearchedImage>
               );
             } else {
               return (
-                <a
-                  // href={image.urls.regular}
-                  target="_blank"
-                  rel="noreferrer"
+                <SearchedImage
                   key={image?.id}
-                >
-                  <div className="info-container">
-                    <div className="image-box">
-                      <img src={image?.urls.small} />
-                    </div>
-                    <h1>{"№: " + parseInt(index + 1)}</h1>
-                    <p>{image?.description}</p>
-                    <h1>{"likes: " + image?.likes}</h1>
-                  </div>
-                </a>
+                  image={image}
+                  reference={null}
+                  index={index}
+                ></SearchedImage>
               );
             }
           })}
       </div>
-      <div>{term.length !== 0 && isLoading && "Loading..."}</div>
-      <div>{error && "Error"}</div>
     </>
   );
 }

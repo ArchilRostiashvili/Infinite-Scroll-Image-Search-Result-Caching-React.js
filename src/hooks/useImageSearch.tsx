@@ -1,17 +1,27 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import axios, { Canceler } from "axios";
 import { useDebounce } from "./bounceHooks";
-import { useQuery } from "@tanstack/react-query";
-
+import { useQuery, keepPreviousData } from "@tanstack/react-query";
+import { useQueryClient } from "@tanstack/react-query";
 export default function useImageSearch(term: string, pageNumber: number) {
   const [hasMore, setHasMore] = useState<boolean>(false);
   const debouncedSearch = useDebounce(term);
-  const [images, setImages] = useState<any[]>([]);
+  const queryClient = useQueryClient();
 
-  const { isLoading, error } = useQuery({
+  console.log({ pageNumber });
+  const {
+    data = [],
+    isFetching,
+    isLoading,
+    error,
+    isRefetching,
+  } = useQuery({
     queryKey: ["search", debouncedSearch, pageNumber],
-    refetchOnWindowFocus: false,
     queryFn: () => {
+      const previousPage = pageNumber - 1;
+      const previousDataExists =
+        queryClient.getQueryData(["search", debouncedSearch, previousPage]) !==
+        undefined;
       let cancel: Canceler;
       if (debouncedSearch.length > 0) {
         return axios({
@@ -26,21 +36,46 @@ export default function useImageSearch(term: string, pageNumber: number) {
           cancelToken: new axios.CancelToken((c) => (cancel = c)),
         })
           .then((res) => {
-            setHasMore(res.data.results.length > 0);
-            setImages((prevImages) => [...prevImages, ...res.data.results]);
-            return res.data.results;
+            console.log("Fetching", { debouncedSearch, data });
+            const storedString = localStorage.getItem("searchHistory");
+            let searchHistory = [];
+            if (storedString) {
+              searchHistory = JSON.parse(storedString);
+            }
+            if (
+              !searchHistory.includes(debouncedSearch) &&
+              debouncedSearch !== ""
+            ) {
+              searchHistory.push(debouncedSearch);
+              localStorage.setItem(
+                "searchHistory",
+                JSON.stringify(searchHistory)
+              );
+            }
+            if (previousDataExists) {
+              const previousData = queryClient.getQueryData([
+                "search",
+                debouncedSearch,
+                previousPage,
+              ]);
+              setHasMore(res.data.results.length > 0);
+              return [...previousData, ...res.data.results];
+            } else {
+              setHasMore(res.data.results.length > 0);
+              return res.data.results;
+            }
           })
           .catch((e) => {
             if (axios.isCancel(e)) return;
             throw e;
           });
-      } else {
-        setImages([]);
-        return [];
       }
       return () => cancel();
     },
+    placeholderData: keepPreviousData,
+    refetchOnWindowFocus: false,
+    staleTime: Infinity,
+    refetchOnMount: true,
   });
-
-  return { isLoading, error, data: images, hasMore };
+  return { isLoading, error, data, hasMore, isFetching, isRefetching };
 }
