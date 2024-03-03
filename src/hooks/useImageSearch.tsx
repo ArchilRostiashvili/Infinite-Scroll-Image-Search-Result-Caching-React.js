@@ -72,15 +72,6 @@ export default function useImageSearch(term: string, pageNumber: number) {
     placeholderData: keepPreviousData,
     staleTime: 60000 * 20,
   });
-
-  console.log({
-    hasMore,
-    debouncedSearch,
-    data,
-    isRefetching,
-    isLoading,
-    isFetching,
-  });
   return {
     isLoading,
     error,
