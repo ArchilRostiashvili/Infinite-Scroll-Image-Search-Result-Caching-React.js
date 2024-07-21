@@ -1,1 +1,1 @@
-React.js project of Image Search + Infinite Scroll + Result Caching and Search History.
+React.js project of Searching Images + Infinite Scroll + Result Caching and Search History.
